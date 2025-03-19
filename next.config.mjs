@@ -1,15 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    env: {
-        firebase_apiKey: process.env.firebase_apiKey,
-        firebase_authDomain: process.env.firebase_authDomain,
-        firebase_databaseURL: process.env.firebase_databaseURL,
-        firebase_projectId: process.env.firebase_projectId,
-        firebase_storageBucket: process.env.firebase_storageBucket,
-        firebase_messagingSenderId: process.env.firebase_messagingSenderId,
-        firebase_appId: process.env.firebase_appId,
-        firebase_measurementId: process.env.firebase_measurementId,
-    }
+  env: {
+    NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:
+      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID:
+      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET:
+      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID:
+      process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  },
 };
 
 export default nextConfig;
