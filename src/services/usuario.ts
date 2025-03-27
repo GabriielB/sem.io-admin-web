@@ -1,106 +1,87 @@
-import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth"
-import { auth, db } from '@/config/firebase';
-import { collection, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { supabase } from "@/config/supabase";
 
 const UsuarioService = {
+  logar: async (
+    email: string,
+    senha: string
+  ): Promise<{ usuario?: any; sucesso: boolean; admin?: boolean }> => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password: senha,
+    });
 
-    /**
-     * Loga usuário
-     * @param email 
-     * @param senha 
-     * @returns {usuario caso logado com sucesso, e o sucesso com um status de logado ou não}
-     */
-    logar: async(email: string, senha: string): Promise<{usuario?:any, sucesso:boolean}> => {
-        return signInWithEmailAndPassword(auth, email, senha)
-            .then(async (retorno) => { 
-                //Verifica se o usuario não foi excluido do banco
-                const dados = await getDoc(doc(db, 'users', retorno.user.uid));
-                console.log('A');
-                dados.exists(dados.exists())
-                if (dados.exists())
-                    return { sucesso: true , usuario: retorno.user}
-                return { sucesso: false };
-            
-            })
-            .catch(erro => { return { sucesso: false }});
-    },
+    if (error || !data.user) return { sucesso: false };
 
-    /**
-     * Função para recuperar senha
-     * @param email 
-     * @returns sucesso status booleano caso tenha conseguido solicitar nova senha
-     */
-    recuperarSenha: async (email: string): Promise<{sucesso: boolean}> => {
-        return sendPasswordResetEmail(auth, email)
-            .then((retorno) => { return { sucesso: true }})
-            .catch(erro => { return { sucesso: false }});
-    },
+    // faz uma verificação para ver se esta presente na tabela admin
+    const { data: adminData } = await supabase
+      .from("admins")
+      .select("*")
+      .eq("id", data.user.id)
+      .single();
 
-    /**
-     * Retorna a lista de usuários do sistema
-     * @returns 
-     */
-    buscarUsuarios: async (): Promise<any[]> => {
-        return getDocs(collection(db, 'users'))
-            .then(snapshots => {
-                const retorno: any[] = [];
-                snapshots.forEach(snap => {
-                    retorno.push(snap.data())
-                })
-                return retorno;
-            })
-            .catch(erro => [])
-    },
-
-    /**
-     * Retorna os dados de um usuário
-     * @param id 
-     * @returns 
-     */
-    buscar: async (id: string): Promise<any>  => {
-        return getDoc(doc(db, 'users', id))
-            .then(retorno => { 
-                return (retorno.exists() ? retorno.data() : null)
-            })
-            .catch(erro => null)
-    },
-
-    /**
-     * Cadastra um novo usuário
-     * @param usuario 
-     * @returns 
-     */
-    cadastrar: async (usuario:any): Promise<{sucesso: boolean}> => {
-        return createUserWithEmailAndPassword(auth, usuario.email, usuario.senha)
-            .then(async retorno => {
-                usuario.uid = retorno.user.uid;
-                delete usuario.senha;
-
-                const usuarioDOC = doc(db, 'users', usuario.uid)
-
-                await setDoc(usuarioDOC, usuario);
-                return { sucesso: true };
-            })
-            .catch(erro => { return { sucesso: false} });
-    },
-    
-    /**
-     * Excluir um usuario
-     * @param usuario 
-     * @returns 
-     */
-    excluir: async (usuario:any): Promise<{sucesso: boolean}> => {
-        return deleteDoc(doc(db, 'users', usuario.uid))
-            .then(retorno => {
-                return { sucesso: true }
-            })
-            .catch(erro => {
-                return { sucesso: false }
-            })
+    if (!adminData) {
+      return { sucesso: true, usuario: data.user, admin: false };
     }
 
+    return { sucesso: true, usuario: data.user, admin: true };
+  },
 
-}
+  recuperarSenha: async (email: string): Promise<{ sucesso: boolean }> => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    return { sucesso: !error };
+  },
 
+  buscarUsuarios: async (): Promise<any[]> => {
+    const { data, error } = await supabase.from("users").select("*");
+    return data || [];
+  },
+
+  buscar: async (id: string): Promise<any> => {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    return data || null;
+  },
+
+  cadastrar: async (usuario: any): Promise<{ sucesso: boolean }> => {
+    const { email, senha, username } = usuario;
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password: senha,
+    });
+
+    if (error || !data.user) return { sucesso: false };
+
+    // func para atualizar o username apos cria-lo
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ username })
+      .eq("id", data.user.id);
+
+    return { sucesso: !updateError };
+  },
+
+  excluir: async (usuario: any): Promise<{ sucesso: boolean }> => {
+    try {
+      const res = await fetch("/api/admin/excluir-usuario", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: usuario.id }),
+      });
+
+      const data = await res.json();
+      return { sucesso: data.sucesso };
+    } catch (err) {
+      console.error("Erro ao excluir:", err);
+      return { sucesso: false };
+    }
+  },
+};
 
 export const useUsuarioService = () => UsuarioService;

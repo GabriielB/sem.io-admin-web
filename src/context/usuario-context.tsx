@@ -1,35 +1,58 @@
 "use client";
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '@/config/firebase';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { supabase } from "@/config/supabase";
 
-const UsuarioContext = createContext<{usuario:any, setUsuario: any, carregado: boolean, deslogar: any}>({usuario: '', setUsuario: null, carregado: false, deslogar: null});
+type UsuarioContextType = {
+  usuario: any;
+  setUsuario: (u: any) => void;
+  carregado: boolean;
+  deslogar: () => void;
+};
+
+const UsuarioContext = createContext<UsuarioContextType>({
+  usuario: "",
+  setUsuario: () => {},
+  carregado: false,
+  deslogar: () => {},
+});
 
 export const UsuarioProvider = ({ children }: any) => {
-    const [usuario, _setUsuario] = useState('');
-    const [ carregado, setCarregado] = useState(false);
+  const [usuario, _setUsuario] = useState<any>("");
+  const [carregado, setCarregado] = useState(false);
 
-    // ======================================================================
-    const setUsuario = (usuario:any) => {
-        localStorage.setItem('usuario', JSON.stringify(usuario))
-        _setUsuario(usuario);
-    }
-    // ---------
-    const deslogar = async () => {
-        localStorage.removeItem('usuario');
-        auth.signOut();
-    }
-    // ---------
-    useEffect(() => {
-        const usuario = localStorage.getItem('usuario');
-        if (usuario) _setUsuario(JSON.parse(usuario));
-        setCarregado(true);
-    }, [])
-    // ======================================================================
-    return (
-        <UsuarioContext.Provider value={{ usuario, setUsuario, carregado, deslogar }}>
-            {children}
-        </UsuarioContext.Provider>
-    );
+  const setUsuario = (usuario: any) => {
+    localStorage.setItem("usuario", JSON.stringify(usuario));
+    _setUsuario(usuario);
+  };
+
+  const deslogar = async () => {
+    localStorage.removeItem("usuario");
+    await supabase.auth.signOut();
+    _setUsuario("");
+  };
+
+  useEffect(() => {
+    const recuperarUsuario = async () => {
+      const local = localStorage.getItem("usuario");
+      if (local) {
+        _setUsuario(JSON.parse(local));
+      } else {
+        const { data, error } = await supabase.auth.getUser();
+        if (data?.user) _setUsuario(data.user);
+      }
+      setCarregado(true);
+    };
+
+    recuperarUsuario();
+  }, []);
+
+  return (
+    <UsuarioContext.Provider
+      value={{ usuario, setUsuario, carregado, deslogar }}
+    >
+      {children}
+    </UsuarioContext.Provider>
+  );
 };
 
 export const useUsuarioContext = () => {
