@@ -1,12 +1,12 @@
 "use client";
-import * as React from "react";
+import { useState } from "react";
+import { Field, Form, Formik } from "formik";
 import { AdminHeader } from "../../components";
 import { useUsuarioService } from "../../../../services/usuario";
-import { Field, Form, Formik } from "formik";
 
-export default function UsuarioEditarPage({ params }: any) {
+export default function UsuarioEditarPage() {
   const usuariosSrv = useUsuarioService();
-  const [mensagem, setMensagem] = React.useState<null | boolean>(null);
+  const [mensagem, setMensagem] = useState<null | boolean>(null);
 
   const handleSalvar = async (usuario: any) => {
     setMensagem(null);
@@ -23,7 +23,7 @@ export default function UsuarioEditarPage({ params }: any) {
 
   return (
     <main>
-      <AdminHeader titulo={"Cadastrar Usuário"} />
+      <AdminHeader titulo="Cadastrar Usuário" />
       <h6>Formulário</h6>
 
       {mensagem === false && (
@@ -35,7 +35,6 @@ export default function UsuarioEditarPage({ params }: any) {
 
       <Formik
         initialValues={{ username: "", email: "", senha: "" }}
-        enableReinitialize
         onSubmit={handleSalvar}
       >
         {({ isSubmitting }) => (
