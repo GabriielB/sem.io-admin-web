@@ -73,23 +73,7 @@ export default function AdminLayout({ children }: any) {
                     <span className="nav-link-text ms-1">Usuarios</span>
                   </Link>
                 </li>
-
-                {/* FORMULARIO */}
-                <li className="nav-item">
-                  <Link
-                    className={
-                      "nav-link " +
-                      (url.includes("formularios") ? "active" : "")
-                    }
-                    href="/admin/formularios"
-                  >
-                    <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                      <i className="ni ni-bullet-list-67 text-warning text-sm opacity-10"></i>
-                    </div>
-                    <span className="nav-link-text ms-1">Formulários</span>
-                  </Link>
-                </li>
-                {/* FORMULARIO */}
+                {/* QUIZZES */}
                 <li className="nav-item">
                   <Link
                     className={
