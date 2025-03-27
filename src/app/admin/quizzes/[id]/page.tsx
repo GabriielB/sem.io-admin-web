@@ -1,42 +1,45 @@
 "use client";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { useQuizService } from "@/services/quiz";
 import { Field, Form, Formik } from "formik";
 import { useRouter, useParams } from "next/navigation";
 import AdminHeader from "@/app/admin/components/header";
+import FileUpload from "@/app/admin/components/FileUpload";
 
 export default function EditQuizPage() {
   const quizSrv = useQuizService();
   const router = useRouter();
   const { id } = useParams();
-  const [initialValues, setInitialValues] = React.useState({
+  const [initialValues, setInitialValues] = useState({
     title: "",
     category: "",
     coverImage: "",
   });
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!id) return;
-    async function fetchQuiz() {
+
+    const fetchQuiz = async () => {
       const quizData = await quizSrv.buscar(id as string);
       if (quizData) {
         setInitialValues({
           title: quizData.title || "",
           category: quizData.category || "",
-          coverImage: quizData.coverImage || "",
+          coverImage: quizData.cover_image || "",
         });
       }
       setLoading(false);
-    }
+    };
+
     fetchQuiz();
-  }, [id]);
+  }, [id, quizSrv]);
 
   if (loading) {
     return (
       <main>
         <AdminHeader titulo="Editar Quiz" />
-        <p>Carregando dados do quiz...</p>
+        <p className="text-center mt-4">Carregando dados do quiz...</p>
       </main>
     );
   }
@@ -44,12 +47,19 @@ export default function EditQuizPage() {
   return (
     <main>
       <AdminHeader titulo="Editar Quiz" />
+
       <Formik
         initialValues={initialValues}
         enableReinitialize
         onSubmit={async (values, { setSubmitting }) => {
-          const retorno = await quizSrv.atualizar(id as string, values);
+          const retorno = await quizSrv.atualizar(id as string, {
+            title: values.title,
+            category: values.category,
+            cover_image: values.coverImage,
+          });
+
           setSubmitting(false);
+
           if (retorno.sucesso) {
             router.push("/admin/quizzes");
           } else {
@@ -57,11 +67,11 @@ export default function EditQuizPage() {
           }
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, setFieldValue, values }) => (
           <Form>
             <div className="card-body">
               <div className="row">
-                {/* titulo */}
+                {/* título */}
                 <div className="col-md-12">
                   <div className="form-group">
                     <label className="form-control-label">Título</label>
@@ -81,16 +91,27 @@ export default function EditQuizPage() {
                   </div>
                 </div>
 
-                {/* imagem */}
+                {/* upload da imagem */}
                 <div className="col-md-6">
                   <div className="form-group">
-                    <label className="form-control-label">
-                      URL da Imagem de Capa
-                    </label>
-                    <Field
-                      className="form-control"
-                      type="text"
-                      name="coverImage"
+                    <label className="form-control-label">Imagem de Capa</label>
+                    {values.coverImage && (
+                      <div style={{ marginBottom: "10px" }}>
+                        <img
+                          src={values.coverImage}
+                          alt="Imagem atual"
+                          style={{
+                            maxWidth: "100%",
+                            height: "auto",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      </div>
+                    )}
+                    <FileUpload
+                      onUpload={(url: string) =>
+                        setFieldValue("coverImage", url)
+                      }
                     />
                   </div>
                 </div>

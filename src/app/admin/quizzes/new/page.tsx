@@ -1,21 +1,33 @@
 "use client";
-import * as React from "react";
-import { useQuizService } from "@/services/quiz";
+import { useState } from "react";
 import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
+import { useQuizService } from "@/services/quiz";
 import AdminHeader from "@/app/admin/components/header";
-import FileUpload from "@/app/admin/components/FileUpload"; // Importe o componente de upload
+import FileUpload from "@/app/admin/components/FileUpload";
 
 export default function QuizNewPage() {
   const quizSrv = useQuizService();
-  const [mensagem, setMensagem] = React.useState<null | boolean>(null);
   const router = useRouter();
+  const [mensagem, setMensagem] = useState<null | boolean>(null);
 
-  const handleSalvar = async (quiz: any) => {
+  const handleSalvar = async (formData: any) => {
     setMensagem(null);
+
+    const quiz = {
+      title: formData.title,
+      category: formData.category,
+      cover_image: formData.coverImage,
+    };
+
+    console.log("Enviando para o Supabase:", quiz);
+
     const retorno = await quizSrv.cadastrar(quiz);
     setMensagem(retorno.sucesso);
-    if (retorno.sucesso) router.push("/admin/quizzes");
+
+    if (retorno.sucesso) {
+      router.push("/admin/quizzes");
+    }
   };
 
   return (
@@ -23,10 +35,10 @@ export default function QuizNewPage() {
       <AdminHeader titulo="Cadastrar Quiz" />
       <h6>Formulário</h6>
 
-      {mensagem !== null && mensagem === false && (
+      {mensagem === false && (
         <p className="alert alert-danger">Não foi possível cadastrar o quiz</p>
       )}
-      {mensagem !== null && mensagem === true && (
+      {mensagem === true && (
         <p className="alert alert-success">Quiz cadastrado com sucesso</p>
       )}
 
@@ -38,7 +50,7 @@ export default function QuizNewPage() {
           <Form>
             <div className="card-body">
               <div className="row">
-                {/* titulo */}
+                {/* Título */}
                 <div className="col-md-12">
                   <div className="form-group">
                     <label className="form-control-label">Título</label>
@@ -46,7 +58,7 @@ export default function QuizNewPage() {
                   </div>
                 </div>
 
-                {/* categoria */}
+                {/* Categoria */}
                 <div className="col-md-6">
                   <div className="form-group">
                     <label className="form-control-label">Categoria</label>
@@ -58,11 +70,10 @@ export default function QuizNewPage() {
                   </div>
                 </div>
 
-                {/* upload da imagem */}
+                {/* Upload da imagem */}
                 <div className="col-md-6">
                   <div className="form-group">
                     <label className="form-control-label">Imagem de Capa</label>
-                    {/* Mostra a imagem se já estiver carregada */}
                     {values.coverImage && (
                       <div style={{ marginBottom: "10px" }}>
                         <img
@@ -80,7 +91,7 @@ export default function QuizNewPage() {
                   </div>
                 </div>
 
-                {/* botão */}
+                {/* Botão */}
                 <div className="col-md-12">
                   <div className="form-group">
                     <button

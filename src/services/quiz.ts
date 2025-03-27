@@ -1,103 +1,100 @@
-// services/quizService.ts
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-  serverTimestamp,
-} from "firebase/firestore";
-import { db } from "@/config/firebase";
+import { supabase } from "@/config/supabase";
 
 const QuizService = {
   /**
-   * Cadastra um novo quiz.
-   * @param quiz Objeto contendo title, category, coverImage e (opcionalmente) questions.
+   * cadastrar quiz
+   * @param quiz Objeto contendo title, category e coverImage.
    * @returns {sucesso: boolean}
    */
   cadastrar: async (quiz: any): Promise<{ sucesso: boolean }> => {
-    return addDoc(collection(db, "quizzes"), {
-      title: quiz.title,
-      category: quiz.category,
-      coverImage: quiz.coverImage,
-      questions: quiz.questions || [],
-      createdAt: serverTimestamp(),
-    })
-      .then(() => ({ sucesso: true }))
-      .catch((erro) => {
-        console.error("Erro ao cadastrar quiz:", erro);
-        return { sucesso: false };
-      });
+    const { error } = await supabase.rpc("create_quiz", {
+      title_input: quiz.title,
+      category_input: quiz.category,
+      cover_image_input: quiz.cover_image,
+    });
+
+    if (error) {
+      console.error("Erro ao cadastrar quiz:", error.message);
+      return { sucesso: false };
+    }
+
+    return { sucesso: true };
   },
 
   /**
-   * Busca um quiz pelo ID.
-   * @param id string - ID do quiz.
+   * buscar pelo id
+   * @param id
    * @returns Dados do quiz ou null.
    */
   buscar: async (id: string): Promise<any> => {
-    return getDoc(doc(db, "quizzes", id))
-      .then((retorno) => (retorno.exists() ? retorno.data() : null))
-      .catch((erro) => {
-        console.error("Erro ao buscar quiz:", erro);
-        return null;
-      });
+    const { data, error } = await supabase
+      .from("quizzes")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      console.error("Erro ao buscar quiz:", error.message);
+      return null;
+    }
+
+    return data;
   },
 
   /**
-   * Lista todos os quizzes.
+   * func para listar todos os quizzes
    * @returns Array de quizzes.
    */
   buscarQuizzes: async (): Promise<any[]> => {
-    return getDocs(collection(db, "quizzes"))
-      .then((snapshots) => {
-        const retorno: any[] = [];
-        snapshots.forEach((snap) => {
-          retorno.push({ id: snap.id, ...snap.data() });
-        });
-        return retorno;
-      })
-      .catch((erro) => {
-        console.error("Erro ao buscar quizzes:", erro);
-        return [];
-      });
+    const { data, error } = await supabase
+      .from("quizzes")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Erro ao buscar quizzes:", error.message);
+      return [];
+    }
+
+    return data || [];
   },
 
   /**
-   * Atualiza os dados de um quiz existente.
+   * atualizar quizz existente
    * @param id string - ID do quiz.
    * @param quiz Objeto com os novos dados.
    * @returns {sucesso: boolean}
    */
   atualizar: async (id: string, quiz: any): Promise<{ sucesso: boolean }> => {
-    return updateDoc(doc(db, "quizzes", id), {
-      title: quiz.title,
-      category: quiz.category,
-      coverImage: quiz.coverImage,
-      questions: quiz.questions || [],
-      updatedAt: serverTimestamp(),
-    })
-      .then(() => ({ sucesso: true }))
-      .catch((erro) => {
-        console.error("Erro ao atualizar quiz:", erro);
-        return { sucesso: false };
-      });
+    const { error } = await supabase.rpc("update_quiz", {
+      quiz_id: id,
+      new_title: quiz.title,
+      new_category: quiz.category,
+      new_cover_image: quiz.cover_image,
+    });
+
+    if (error) {
+      console.error("Erro ao atualizar quiz:", error.message);
+      return { sucesso: false };
+    }
+
+    return { sucesso: true };
   },
 
   /**
-   * Exclui um quiz.
-   * @param id string - ID do quiz.
+   * func para excluir o quizz
+   * @param id
    * @returns {sucesso: boolean}
    */
   excluir: async (id: string): Promise<{ sucesso: boolean }> => {
-    return deleteDoc(doc(db, "quizzes", id))
-      .then(() => ({ sucesso: true }))
-      .catch((erro) => {
-        console.error("Erro ao excluir quiz:", erro);
-        return { sucesso: false };
-      });
+    const { error } = await supabase.rpc("delete_quiz", { quiz_id: id });
+
+    if (error) {
+      console.error("Erro ao excluir quiz:", error.message);
+      return { sucesso: false };
+    }
+
+    return { sucesso: true };
   },
 };
 

@@ -1,42 +1,55 @@
 "use client";
-import * as React from 'react';
-import { AdminHeader } from '../../components';
-import { useUsuarioService } from '../../../../services/usuario';
-import { Field, Form, Formik } from 'formik';
+import { useState } from "react";
+import { Field, Form, Formik } from "formik";
+import { AdminHeader } from "../../components";
+import { useUsuarioService } from "../../../../services/usuario";
 
-export default function UsuarioEditarPage ({params}: any) {
+export default function UsuarioEditarPage() {
+  const usuariosSrv = useUsuarioService();
+  const [mensagem, setMensagem] = useState<null | boolean>(null);
 
-    const usuariosSrv = useUsuarioService();
-    const [ mensagem , setMensagem ] = React.useState<null|boolean>(null)
-    // ======================================================================
-    const handleSalvar = async (usuario:any) => {
-      setMensagem(null);
-      const retorno = await usuariosSrv.cadastrar(usuario);
-      setMensagem(retorno.sucesso)
-    }
-    // ======================================================================
-    return (
-      <main>
-            <AdminHeader titulo={('Cadastrar Usuário')}/>
-            <h6>Formulário</h6>    
+  const handleSalvar = async (usuario: any) => {
+    setMensagem(null);
 
-            { mensagem != null && mensagem == false && <p className="alert alert-danger">Não foi possível cadastrar usuário</p>}
-            { mensagem != null && mensagem == true && <p className="alert alert-success">Cadastrado com sucesso</p>}
+    const novoUsuario = {
+      email: usuario.email,
+      senha: usuario.senha,
+      username: usuario.username,
+    };
 
-          <Formik
-            initialValues={{  nome: '', email: '', senha: ''}}
-            enableReinitialize
-            onSubmit={handleSalvar}
-          >
-            {({isSubmitting}) => (
-              <Form>
-            <div className="card-body">  
-              {/* NOME */}
+    const retorno = await usuariosSrv.cadastrar(novoUsuario);
+    setMensagem(retorno.sucesso);
+  };
+
+  return (
+    <main>
+      <AdminHeader titulo="Cadastrar Usuário" />
+      <h6>Formulário</h6>
+
+      {mensagem === false && (
+        <p className="alert alert-danger">Não foi possível cadastrar usuário</p>
+      )}
+      {mensagem === true && (
+        <p className="alert alert-success">Cadastrado com sucesso</p>
+      )}
+
+      <Formik
+        initialValues={{ username: "", email: "", senha: "" }}
+        onSubmit={handleSalvar}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <div className="card-body">
               <div className="row">
+                {/* USERNAME */}
                 <div className="col-md-12">
                   <div className="form-group">
-                    <label className="form-control-label">Nome</label>
-                    <Field className="form-control" type="text" name="nome" />
+                    <label className="form-control-label">Username</label>
+                    <Field
+                      className="form-control"
+                      type="text"
+                      name="username"
+                    />
                   </div>
                 </div>
 
@@ -44,7 +57,7 @@ export default function UsuarioEditarPage ({params}: any) {
                 <div className="col-md-4">
                   <div className="form-group">
                     <label className="form-control-label">Email</label>
-                    <Field className="form-control" type="email"  name="email"/>
+                    <Field className="form-control" type="email" name="email" />
                   </div>
                 </div>
 
@@ -52,20 +65,31 @@ export default function UsuarioEditarPage ({params}: any) {
                 <div className="col-md-4">
                   <div className="form-group">
                     <label className="form-control-label">Senha</label>
-                    <Field className="form-control" type="password" name="senha"/>
+                    <Field
+                      className="form-control"
+                      type="password"
+                      name="senha"
+                    />
                   </div>
                 </div>
 
                 {/* BOTÃO */}
                 <div className="col-md-12">
                   <div className="form-group">
-                    <button className='btn btn-primary w-100' type="submit" disabled={isSubmitting}>Salvar</button>
+                    <button
+                      className="btn btn-primary w-100"
+                      type="submit"
+                      disabled={isSubmitting}
+                    >
+                      Salvar
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
-            </Form>)}   
-          </Formik>
-      </main>
-    );
+          </Form>
+        )}
+      </Formik>
+    </main>
+  );
 }
