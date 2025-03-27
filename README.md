@@ -4,7 +4,7 @@
 # VERSÃO COM SUPABASE
 
 - Acesse o supabase e crie um projeto web. [Supabase](https://supabase.com/)
-- Inicialmente, copie o arquivo .env.local.example e o salve como .env.local 
+- Crie um arquivo .env.local e salve suas keys do Supabase.
 - Dentro desse arquivo altere os dados do %VALOR% pelos dados das suas configurações da conta do supabase
 
 
