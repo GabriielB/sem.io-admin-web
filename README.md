@@ -1,10 +1,11 @@
 ## Template Argo Admin adaptado para trabalhar com NextJS
+## Adaptação e projeto feitos por https://github.com/GabriielB
 
-# VERSÃO COM FIREBASE
+# VERSÃO COM SUPABASE
 
-- Acesse o firebase e crie um projeto web. [Firebase](https://console.firebase.google.com/)
+- Acesse o supabase e crie um projeto web. [Supabase](https://supabase.com/)
 - Inicialmente, copie o arquivo .env.local.example e o salve como .env.local 
-- Dentro desse arquivo altere os dados do %VALOR% pelos dados das suas configurações da conta do firebase. 
+- Dentro desse arquivo altere os dados do %VALOR% pelos dados das suas configurações da conta do supabase
 
 
 Baixe o projeto e depois execute os comandos abaixos:
@@ -19,4 +20,5 @@ Dentro da pasta html, existe o template original para quem desejar buscar inform
 
 # Exemplo disponivel
 
-https://carloswgama.github.io/next-template-admin/
+## Template Base forkado de:
+https://carloswgama.github.io/next-template-admin/ 
