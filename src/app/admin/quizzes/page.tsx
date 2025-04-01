@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import AdminHeader from "@/app/admin/components/header";
 import { useQuizService } from "@/services/quiz";
+import { useRouter } from "next/navigation";
 
 export default function QuizzesPage() {
   const quizSrv = useQuizService();
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const carregar = async () => {
@@ -94,6 +96,15 @@ export default function QuizzesPage() {
                         onClick={() => handleDeletarQuiz(quiz)}
                       >
                         Excluir
+                      </p>
+                      <p
+                        className="text-info font-weight-bold text-xs"
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          router.push(`/admin/quizzes/${quiz.id}/questions`)
+                        }
+                      >
+                        Gerenciar Perguntas
                       </p>
                     </td>
                   </tr>
