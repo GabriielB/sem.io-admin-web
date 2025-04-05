@@ -69,20 +69,22 @@ export default function QuestionsPage() {
                   <tr key={q.id}>
                     <td>{q.description}</td>
                     <td>{q.options?.length || 0}</td>
-                    <td className="d-flex gap-3">
-                      <Link
-                        href={`/admin/quizzes/${id}/questions/${q.id}`}
-                        className="text-primary font-weight-bold text-xs"
-                      >
-                        Editar
-                      </Link>
-                      <p
-                        className="text-danger font-weight-bold text-xs"
-                        style={{ cursor: "pointer", marginBottom: 0 }}
-                        onClick={() => handleExcluirPergunta(q.id)}
-                      >
-                        Excluir
-                      </p>
+                    <td>
+                      <div className="d-flex align-items-center gap-3">
+                        <Link
+                          href={`/admin/quizzes/${id}/questions/${q.id}`}
+                          className="text-primary font-weight-bold text-xs"
+                        >
+                          Editar
+                        </Link>
+                        <p
+                          className="text-danger font-weight-bold text-xs mb-0"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleExcluirPergunta(q.id)}
+                        >
+                          Excluir
+                        </p>
+                      </div>
                     </td>
                   </tr>
                 ))}

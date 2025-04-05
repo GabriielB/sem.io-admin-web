@@ -7,7 +7,7 @@ import FileUpload from "@/app/admin/components/FileUpload";
 import { useQuestionService } from "@/services/question";
 
 export default function EditQuestionPage() {
-  const { questionId, quizId } = useParams();
+  const { questionId, id } = useParams();
   const router = useRouter();
   const questionSrv = useQuestionService();
 
@@ -60,7 +60,7 @@ export default function EditQuestionPage() {
           onSubmit={async (values, { setSubmitting }) => {
             const payload = {
               ...values,
-              quiz_id: quizId,
+              quiz_id: id,
             };
 
             const retorno = await questionSrv.atualizar(
@@ -70,7 +70,7 @@ export default function EditQuestionPage() {
 
             setSubmitting(false);
             if (retorno.sucesso) {
-              router.push(`/admin/quizzes/${quizId}/questions`);
+              router.push(`/admin/quizzes/${id}/questions`);
             } else {
               alert("Erro ao atualizar pergunta.");
             }

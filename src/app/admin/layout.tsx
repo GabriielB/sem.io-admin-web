@@ -35,7 +35,9 @@ export default function AdminLayout({ children }: any) {
                 id="iconSidenav"
               ></i>
               <p className="navbar-brand m-0">
-                <span className="ms-1 font-weight-bold">ADMIN TEMPLATE</span>
+                <span className="ms-1 font-weight-bold">
+                  PAINEL DE ADMIN SEM.IO
+                </span>
               </p>
             </div>
             <hr className="horizontal dark mt-0" />
@@ -87,6 +89,20 @@ export default function AdminLayout({ children }: any) {
                     <span className="nav-link-text ms-1">Quizzes</span>
                   </Link>
                 </li>
+                {/* Resumos */}
+                <li className="nav-item">
+                  <Link
+                    className={
+                      "nav-link " + (url.includes("summaries") ? "active" : "")
+                    }
+                    href="/admin/summaries"
+                  >
+                    <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                      <i className="ni ni-bullet-list-67 text-warning text-sm opacity-10"></i>
+                    </div>
+                    <span className="nav-link-text ms-1">Resumos</span>
+                  </Link>
+                </li>
               </ul>
             </div>
             {/* SAIR */}
@@ -127,13 +143,7 @@ export default function AdminLayout({ children }: any) {
 
             <footer className="footer pt-3  ">
               <div className="container-fluid">
-                <div className="row align-items-center justify-content-lg-between">
-                  <div className="col-lg-6 mb-lg-0 mb-4">
-                    <p className="copyright text-center text-white text-sm text-lg-start">
-                      Template Argon adaptado por CWG
-                    </p>
-                  </div>
-                </div>
+                <div className="row align-items-center justify-content-lg-between"></div>
               </div>
             </footer>
           </main>
