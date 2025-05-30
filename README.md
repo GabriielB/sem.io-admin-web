@@ -18,7 +18,3 @@ npm run dev
 Dentro da pasta html, existe o template original para quem desejar buscar informações
 
 
-# Exemplo disponivel
-
-## Template Base forkado de:
-https://carloswgama.github.io/next-template-admin/ 
