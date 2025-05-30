@@ -1,166 +1,158 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useUsuarioContext } from "../../context/usuario-context";
+import Image from "next/image";
 
 export default function AdminLayout({ children }: any) {
   const router = useRouter();
   const { usuario, carregado, deslogar } = useUsuarioContext();
   const url = usePathname();
-  // ==============================================================
+
   const handleSair = () => {
     deslogar();
     router.replace("/");
   };
-  // --------------
+
   useEffect(() => {
     if (carregado && !usuario) router.replace("/");
   }, [carregado]);
-  // ===============================================================
+
   return (
     <>
       {carregado && usuario && (
-        <main>
-          <div className="h-100 bg-primary position-absolute w-100"></div>
-          {/* MENU */}
+        <main className="d-flex bg-light min-vh-100">
+          {/* barra lateral */}
           <aside
-            className="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 offcanvas-lg"
-            id="sidenav-main"
+            className="bg-white shadow-sm d-flex flex-column justify-content-between px-4 py-4"
+            style={{
+              width: 260,
+              minHeight: "100vh",
+              borderRight: "1px solid #e0e0e0",
+              paddingRight: "1rem",
+            }}
           >
-            <div className="sidenav-header">
-              <i
-                className="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
-                aria-hidden="true"
-                id="iconSidenav"
-              ></i>
-              <p className="navbar-brand m-0">
-                <span className="ms-1 font-weight-bold">
-                  PAINEL DE ADMIN SEM.IO
-                </span>
-              </p>
-            </div>
-            <hr className="horizontal dark mt-0" />
-            <div
-              className="collapse navbar-collapse  w-auto "
-              id="sidenav-collapse-main"
-            >
-              <ul className="navbar-nav">
-                {/* DASHBOARD */}
-                <li className="nav-item">
-                  <Link
-                    className={
-                      "nav-link " + (url.includes("dashboard") ? "active" : "")
-                    }
-                    href="/admin/dashboard"
-                  >
-                    <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                      <i className="ni ni-tv-2 text-primary text-sm opacity-10"></i>
-                    </div>
-                    <span className="nav-link-text ms-1">Dashboard</span>
-                  </Link>
-                </li>
+            <div>
+              <div className="d-flex flex-column align-items-center mb-4">
+                <Image
+                  src="/img/SemioPet.svg"
+                  alt="SemioPet"
+                  width={120}
+                  height={70}
+                  priority
+                  style={{ objectFit: "contain" }}
+                />
+                <h6 className="mt-3 fw-bold text-primary">Painel Admin</h6>
+              </div>
 
-                {/* USUARIOS */}
-                <li className="nav-item">
+              <ul className="navbar-nav d-flex flex-column gap-3">
+                <li>
                   <Link
-                    className={
-                      "nav-link " + (url.endsWith("usuarios") ? "active" : "")
-                    }
+                    href="/admin/dashboard"
+                    className={`nav-link d-flex align-items-center p-3 rounded ${
+                      url.includes("dashboard")
+                        ? "bg-primary text-white"
+                        : "text-dark"
+                    }`}
+                  >
+                    <i className="ni ni-tv-2 fs-5 me-2"></i> Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/admin/usuarios"
+                    className={`nav-link d-flex align-items-center p-3 rounded ${
+                      url.endsWith("usuarios")
+                        ? "bg-primary text-white"
+                        : "text-dark"
+                    }`}
                   >
-                    <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                      <i className="ni ni-bullet-list-67 text-warning text-sm opacity-10"></i>
-                    </div>
-                    <span className="nav-link-text ms-1">Usuarios</span>
+                    <i className="ni ni-single-02 fs-5 me-2"></i> Usuários
                   </Link>
                 </li>
-                {/* QUIZZES */}
-                <li className="nav-item">
+                <li>
                   <Link
-                    className={
-                      "nav-link " + (url.includes("quizzes") ? "active" : "")
-                    }
                     href="/admin/quizzes"
+                    className={`nav-link d-flex align-items-center p-3 rounded ${
+                      url.includes("quizzes")
+                        ? "bg-primary text-white"
+                        : "text-dark"
+                    }`}
                   >
-                    <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                      <i className="ni ni-bullet-list-67 text-warning text-sm opacity-10"></i>
-                    </div>
-                    <span className="nav-link-text ms-1">Quizzes</span>
+                    <i className="ni ni-hat-3 fs-5 me-2"></i> Quizzes
                   </Link>
                 </li>
-                {/* Resumos */}
-                <li className="nav-item">
+                <li>
                   <Link
-                    className={
-                      "nav-link " + (url.includes("summaries") ? "active" : "")
-                    }
                     href="/admin/summaries"
+                    className={`nav-link d-flex align-items-center p-3 rounded ${
+                      url.includes("summaries")
+                        ? "bg-primary text-white"
+                        : "text-dark"
+                    }`}
                   >
-                    <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                      <i className="ni ni-bullet-list-67 text-warning text-sm opacity-10"></i>
-                    </div>
-                    <span className="nav-link-text ms-1">Resumos</span>
+                    <i className="ni ni-single-copy-04 fs-5 me-2"></i> Resumos
                   </Link>
                 </li>
-                {/* Mapas mentais */}
-                <li className="nav-item">
+                <li>
                   <Link
-                    className={
-                      "nav-link " + (url.includes("mindmaps") ? "active" : "")
-                    }
                     href="/admin/mindmaps"
+                    className={`nav-link d-flex align-items-center p-3 rounded ${
+                      url.includes("mindmaps")
+                        ? "bg-primary text-white"
+                        : "text-dark"
+                    }`}
                   >
-                    <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                      <i className="ni ni-bullet-list-67 text-warning text-sm opacity-10"></i>
-                    </div>
-                    <span className="nav-link-text ms-1">Mapas Mentais</span>
+                    <i className="ni ni-map-big fs-5 me-2"></i> Mapas Mentais
                   </Link>
                 </li>
               </ul>
             </div>
-            {/* SAIR */}
-            <div className="sidenav-footer mx-3 ">
-              <p
-                className="btn btn-primary btn-sm mb-0 w-100"
-                onClick={handleSair}
-                style={{ cursor: "pointer" }}
-              >
-                Deslogar
-              </p>
-            </div>
+
+            <button
+              className="btn btn-outline-danger w-100 rounded-pill py-2 d-flex align-items-center justify-content-center mt-4"
+              onClick={handleSair}
+            >
+              <i className="ni ni-user-run me-2"></i> Sair
+            </button>
           </aside>
 
-          {/* FIM MENU */}
-          <main className="main-content position-relative border-radius-lg ">
-            {/* HEADER */}
+          {/* conteudo principal */}
+          <div
+            className="flex-grow-1 d-flex flex-column"
+            style={{ paddingLeft: "2rem", paddingRight: "2rem" }}
+          >
             <nav
-              className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl "
-              id="navbarBlur"
-              data-scroll="false"
+              className="navbar navbar-light bg-white shadow-sm px-5 py-3 d-flex justify-content-between align-items-center"
+              style={{ marginBottom: "1.5rem", borderRadius: "12px" }}
             >
-              <div className="container-fluid py-1 px-3 justify-content-end">
-                <p className="nav-link text-white font-weight-bold text-right">
-                  Bem vindo, {usuario.nome}
-                  <i className="fa fa-user me-sm-1"></i>
-                  <span className="d-sm-inline" onClick={handleSair}>
-                    (Deslogar)
-                  </span>
-                </p>
-              </div>
+              <span className="fw-semibold text-dark fs-5">Bem-vindo</span>
+              <button
+                className="btn btn-sm btn-outline-danger rounded-pill d-flex align-items-center px-3 py-2"
+                onClick={handleSair}
+              >
+                <i className="ni ni-user-run me-1"></i> Sair
+              </button>
             </nav>
-            {/* FIM HEADER */}
 
-            <div className="container-fluid ">
-              <div className="container-fluid py-4 card">{children}</div>
+            <div
+              className="container-fluid"
+              style={{
+                padding: "2rem",
+                borderRadius: "16px",
+                backgroundColor: "#fff",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+                marginBottom: "2rem",
+              }}
+            >
+              {children}
             </div>
 
-            <footer className="footer pt-3  ">
-              <div className="container-fluid">
-                <div className="row align-items-center justify-content-lg-between"></div>
-              </div>
+            <footer className="text-center text-muted py-3 mt-auto">
+              &copy; {new Date().getFullYear()} Sem.io
             </footer>
-          </main>
+          </div>
         </main>
       )}
     </>

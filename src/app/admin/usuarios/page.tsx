@@ -50,58 +50,60 @@ export default function UsuariosPage() {
         </Link>
       </AdminHeader>
 
-      <div className="card-header pb-0">
-        <h6>Usuários</h6>
-      </div>
-      <div className="card-body px-0 pt-0 pb-2">
-        {carregando ? (
-          <p className="text-center">Carregando usuários...</p>
-        ) : (
-          <div className="table-responsive p-0">
-            <table className="table align-items-center mb-0">
-              <thead>
-                <tr>
-                  <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                    Usuário
-                  </th>
-                  <th className="text-secondary opacity-7"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {usuarios.map((usuario) => (
-                  <tr key={usuario.id}>
-                    <td>
-                      <div className="d-flex px-2 py-1">
-                        <div className="d-flex flex-column justify-content-center">
-                          <h6 className="mb-0 text-sm">{usuario.username}</h6>
-                          <p className="text-xs text-secondary mb-0">
-                            {usuario.email}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="align-middle">
-                      <p
-                        className="text-secondary font-weight-bold text-xs"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleResetarSenha(usuario)}
-                      >
-                        Resetar senha
-                      </p>
-                      <p
-                        className="text-danger font-weight-bold text-xs"
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleDeletarConta(usuario)}
-                      >
-                        Excluir conta
-                      </p>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+      <div className="card shadow-lg border-0 rounded-4 p-3">
+        <div className="card-header bg-white border-0 pb-3">
+          <h5 className="text-dark fw-bold mb-0">Usuários Cadastrados</h5>
+        </div>
+
+        <div className="card-body p-0">
+          {carregando ? (
+            <p className="text-center text-muted py-4">
+              Carregando usuários...
+            </p>
+          ) : usuarios.length === 0 ? (
+            <p className="text-center text-muted py-4">
+              Nenhum usuário encontrado.
+            </p>
+          ) : (
+            <div className="list-group list-group-flush">
+              {usuarios.map((usuario) => (
+                <div
+                  key={usuario.id}
+                  className="list-group-item d-flex justify-content-between align-items-center py-3 px-4 border-0 border-bottom"
+                >
+                  <div className="d-flex align-items-center">
+                    <div
+                      className="rounded-circle bg-gradient-primary d-flex align-items-center justify-content-center me-3"
+                      style={{ width: 32, height: 32 }}
+                    >
+                      <i className="ni ni-single-02 text-white fs-6"></i>
+                    </div>
+                    <div>
+                      <h6 className="mb-0 fw-semibold">{usuario.username}</h6>
+                      <p className="mb-0 text-muted small">{usuario.email}</p>
+                    </div>
+                  </div>
+                  <div className="d-flex">
+                    <button
+                      className="btn btn-sm btn-outline-dark me-2 rounded-pill d-flex align-items-center"
+                      onClick={() => handleResetarSenha(usuario)}
+                      style={{ transition: "all 0.2s" }}
+                    >
+                      <i className="ni ni-lock-circle-open me-1"></i> Resetar
+                    </button>
+                    <button
+                      className="btn btn-sm btn-outline-danger rounded-pill d-flex align-items-center"
+                      onClick={() => handleDeletarConta(usuario)}
+                      style={{ transition: "all 0.2s" }}
+                    >
+                      <i className="ni ni-fat-remove me-1"></i> Excluir
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );

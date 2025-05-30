@@ -48,36 +48,56 @@ export default function DashboardPage() {
       <div className="row mt-4">
         <div className="col-md-3 mb-4">
           <div className="card text-white bg-gradient-info shadow">
-            <div className="card-body">
-              <h6>Total de Quizzes</h6>
-              <h3>{totalQuizzes}</h3>
+            <div className="card-body d-flex align-items-center">
+              <div className="me-3">
+                <i className="ni ni-hat-3 text-white text-lg"></i>
+              </div>
+              <div>
+                <h6 className="mb-0">Total de Quizzes</h6>
+                <h3 className="mb-0">{totalQuizzes}</h3>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="col-md-3 mb-4">
           <div className="card text-white bg-gradient-success shadow">
-            <div className="card-body">
-              <h6>Total de Resumos</h6>
-              <h3>{totalSummaries}</h3>
+            <div className="card-body d-flex align-items-center">
+              <div className="me-3">
+                <i className="ni ni-single-copy-04 text-white text-lg"></i>
+              </div>
+              <div>
+                <h6 className="mb-0">Total de Resumos</h6>
+                <h3 className="mb-0">{totalSummaries}</h3>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="col-md-3 mb-4">
           <div className="card text-white bg-gradient-warning shadow">
-            <div className="card-body">
-              <h6>Total de Usuários</h6>
-              <h3>{totalUsers}</h3>
+            <div className="card-body d-flex align-items-center">
+              <div className="me-3">
+                <i className="ni ni-circle-08 text-white text-lg"></i>
+              </div>
+              <div>
+                <h6 className="mb-0">Total de Usuários</h6>
+                <h3 className="mb-0">{totalUsers}</h3>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="col-md-3 mb-4">
           <div className="card text-white bg-gradient-primary shadow">
-            <div className="card-body">
-              <h6>Total de Mapas Mentais</h6>
-              <h3>{totalMindmaps}</h3>
+            <div className="card-body d-flex align-items-center">
+              <div className="me-3">
+                <i className="ni ni-map-big text-white text-lg"></i>
+              </div>
+              <div>
+                <h6 className="mb-0">Total de Mapas Mentais</h6>
+                <h3 className="mb-0">{totalMindmaps}</h3>
+              </div>
             </div>
           </div>
         </div>
@@ -91,15 +111,18 @@ export default function DashboardPage() {
               <h6 className="mb-0">Últimos Quizzes Criados</h6>
             </div>
             <div className="card-body">
-              <ul className="list-group">
+              <ul className="list-group list-group-flush">
                 {recentQuizzes.map((quiz) => (
                   <li
                     className="list-group-item d-flex justify-content-between align-items-center"
                     key={quiz.id}
                   >
-                    <div>
-                      <strong>{quiz.title}</strong>
-                      <p className="mb-0 text-muted small">{quiz.category}</p>
+                    <div className="d-flex align-items-center">
+                      <i className="ni ni-hat-3 text-info me-3"></i>
+                      <div>
+                        <strong>{quiz.title}</strong>
+                        <p className="mb-0 text-muted small">{quiz.category}</p>
+                      </div>
                     </div>
                     <span className="text-muted small">
                       {new Date(quiz.created_at).toLocaleDateString()}
@@ -117,17 +140,20 @@ export default function DashboardPage() {
               <h6 className="mb-0">Últimos Resumos Cadastrados</h6>
             </div>
             <div className="card-body">
-              <ul className="list-group">
+              <ul className="list-group list-group-flush">
                 {recentSummaries.map((summary) => (
                   <li
                     className="list-group-item d-flex justify-content-between align-items-center"
                     key={summary.id}
                   >
-                    <div>
-                      <strong>{summary.title}</strong>
-                      <p className="mb-0 text-muted small">
-                        {summary.category}
-                      </p>
+                    <div className="d-flex align-items-center">
+                      <i className="ni ni-single-copy-04 text-success me-3"></i>
+                      <div>
+                        <strong>{summary.title}</strong>
+                        <p className="mb-0 text-muted small">
+                          {summary.category}
+                        </p>
+                      </div>
                     </div>
                     <span className="text-muted small">
                       {new Date(summary.created_at).toLocaleDateString()}
@@ -145,15 +171,18 @@ export default function DashboardPage() {
               <h6 className="mb-0">Últimos Mapas Mentais</h6>
             </div>
             <div className="card-body">
-              <ul className="list-group">
+              <ul className="list-group list-group-flush">
                 {recentMindmaps.map((mapa) => (
                   <li
                     className="list-group-item d-flex justify-content-between align-items-center"
                     key={mapa.id}
                   >
-                    <div>
-                      <strong>{mapa.title}</strong>
-                      <p className="mb-0 text-muted small">{mapa.category}</p>
+                    <div className="d-flex align-items-center">
+                      <i className="ni ni-map-big text-primary me-3"></i>
+                      <div>
+                        <strong>{mapa.title}</strong>
+                        <p className="mb-0 text-muted small">{mapa.category}</p>
+                      </div>
                     </div>
                     <span className="text-muted small">
                       {new Date(mapa.created_at).toLocaleDateString()}

@@ -46,52 +46,65 @@ export default function QuestionsPage() {
         </Link>
       </AdminHeader>
 
-      <div className="card-header pb-0">
-        <h6>Perguntas</h6>
-      </div>
-      <div className="card-body px-0 pt-0 pb-2">
-        {loading ? (
-          <p className="text-center">Carregando perguntas...</p>
-        ) : questions.length === 0 ? (
-          <p className="text-center">Nenhuma pergunta cadastrada ainda.</p>
-        ) : (
-          <div className="table-responsive p-0">
-            <table className="table align-items-center mb-0">
-              <thead>
-                <tr>
-                  <th>Descrição</th>
-                  <th>Qtd. Opções</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {questions.map((q) => (
-                  <tr key={q.id}>
-                    <td>{q.description}</td>
-                    <td>{q.options?.length || 0}</td>
-                    <td>
-                      <div className="d-flex align-items-center gap-3">
-                        <Link
-                          href={`/admin/quizzes/${id}/questions/${q.id}`}
-                          className="text-primary font-weight-bold text-xs"
-                        >
-                          Editar
-                        </Link>
-                        <p
-                          className="text-danger font-weight-bold text-xs mb-0"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleExcluirPergunta(q.id)}
-                        >
-                          Excluir
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+      <div className="card shadow-lg border-0 rounded-4 p-3">
+        <div className="card-header bg-white border-0 pb-3">
+          <h5 className="text-dark fw-bold mb-0">Perguntas</h5>
+        </div>
+
+        <div className="card-body p-0">
+          {loading ? (
+            <p className="text-center text-muted py-4">
+              Carregando perguntas...
+            </p>
+          ) : questions.length === 0 ? (
+            <p className="text-center text-muted py-4">
+              Nenhuma pergunta cadastrada ainda.
+            </p>
+          ) : (
+            <div className="list-group list-group-flush">
+              {questions.map((q) => (
+                <div
+                  key={q.id}
+                  className="list-group-item d-flex justify-content-between align-items-center py-3 px-4 border-0 border-bottom"
+                >
+                  <div className="d-flex align-items-center">
+                    <div
+                      className="rounded-circle bg-gradient-warning d-flex align-items-center justify-content-center me-3"
+                      style={{ width: 32, height: 32 }}
+                    >
+                      <i className="ni ni-bullet-list-67 text-white fs-6"></i>
+                    </div>
+                    <div>
+                      <h6 className="mb-0 fw-semibold">{q.description}</h6>
+                      <p className="mb-0 text-muted small">
+                        {q.options?.length || 0} opção
+                        {q.options?.length === 1 ? "" : "s"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="d-flex">
+                    <Link
+                      href={`/admin/quizzes/${id}/questions/${q.id}`}
+                      className="btn btn-sm btn-outline-dark me-2 rounded-pill d-flex align-items-center"
+                      style={{ transition: "all 0.2s" }}
+                    >
+                      <i className="ni ni-ruler-pencil me-1"></i> Editar
+                    </Link>
+
+                    <button
+                      className="btn btn-sm btn-outline-danger rounded-pill d-flex align-items-center"
+                      onClick={() => handleExcluirPergunta(q.id)}
+                      style={{ transition: "all 0.2s" }}
+                    >
+                      <i className="ni ni-fat-remove me-1"></i> Excluir
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );
